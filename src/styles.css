@@ -1,1 +1,149 @@
-/* You can add global styles to this file, and also import other style files */
+
+
+
+
+body.dark-mode {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode h1, 
+body.dark-mode h4, 
+body.dark-mode p,
+body.dark-mode label {
+    color: #ffffff !important;
+}
+
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+    background-color: #333333 !important;
+    color: #ffffff !important;
+    border-color: #555555 !important;
+}
+
+
+body.dark-mode .btn {
+    background-color: #555555 !important;
+    color: #ffffff !important;
+    border: 1px solid #777777 !important;
+}
+
+body.dark-mode .btn:hover {
+    background-color: #666666 !important;
+}
+
+
+body.dark-mode .navbar {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .navbar a {
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode .navbar a:hover {
+    color: #ffffff !important;
+}
+
+
+body.dark-mode .fixed-box {
+    background-color: #2c2c2c !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 20px !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+
+body.dark-mode .form-control:focus,
+body.dark-mode .form-select:focus {
+    border-color: #777777 !important;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3) !important;
+}
+
+
+body.dark-mode .text-end button {
+    background-color: #444444 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .text-end button:hover {
+    background-color: #555555 !important;
+}
+
+body.dark-mode .main-container {
+    background-color: #2c2c2c !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .container {
+    background-color: #2c2c2c !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 20px !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+    background-color: #333333 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .btn {
+    background-color: #555555 !important;
+    color: #ffffff !important;
+}
+
+
+body.dark-mode .main-container .form-control,
+body.dark-mode .main-container .form-select {
+    background-color: #333333 !important;
+    color: #ffffff !important;
+    border: 1px solid #555555 !important;
+}
+
+
+body.dark-mode .main-container .form-control.ng-untouched,
+body.dark-mode .main-container .form-select.ng-untouched {
+    background-color: #444444 !important;
+}
+
+body.dark-mode .main-container .form-control.ng-dirty,
+body.dark-mode .main-container .form-select.ng-dirty {
+    background-color: #555555 !important;
+}
+
+body.dark-mode .main-container .form-control.ng-valid,
+body.dark-mode .main-container .form-select.ng-valid {
+    border-color: #616a65 !important;
+}
+
+body.dark-mode .main-container .form-control.ng-invalid,
+body.dark-mode .main-container .form-select.ng-invalid {
+    border-color: #616a65 !important;
+}
+
+
+body.dark-mode .main-container .btn {
+    background-color: #555555 !important;
+    color: #ffffff !important;
+}
+
+
+body.dark-mode .main-container .form-control:focus,
+body.dark-mode .main-container .form-select:focus {
+    border-color: #777777 !important;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3) !important;
+}
+
+body.dark-mode .form-control::placeholder,
+body.dark-mode .form-select::placeholder {
+    color: #ffffff !important; 
+}
+.ng-untouched .ng-pristine .ng-invalid{
+    background-color: rgba(255,255,255,0.3);
+}
+     
