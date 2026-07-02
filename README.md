@@ -1,6 +1,25 @@
 # Gpacalc
-
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.8.
+
+## Summary
+A responsive Angular web application that calculates GPA in real time and tracks semester performance with a clean UI.
+
+## Key Features
+- Real-time GPA calculation engine
+- Responsive UI for mobile and desktop
+- Semester tracking system
+- Clean Angular component-based architecture
+
+## Tech Stack
+- Angular
+- TypeScript
+- HTML / CSS
+
+## My Role / What I Built
+- Built GPA calculation logic and state handling
+- Designed responsive UI components
+- Implemented real-time data updates across UI
+
 
 ## Development server
 
