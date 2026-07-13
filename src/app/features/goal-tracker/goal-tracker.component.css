@@ -1,0 +1,22 @@
+.goal-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-4);
+    margin: var(--space-3) 0 var(--space-4);
+}
+
+.current-stats {
+    border-top: 1px solid var(--border);
+    padding-top: var(--space-3);
+}
+
+.result-card {
+    margin-top: var(--space-5);
+    min-height: 140px;
+}
+
+.result-message {
+    margin-top: var(--space-2);
+    color: var(--text-secondary);
+    line-height: 1.6;
+}

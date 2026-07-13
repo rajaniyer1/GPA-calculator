@@ -1,0 +1,18 @@
+@if (open) {
+<div class="dialog-overlay" (click)="cancel()">
+    <div
+        class="dialog-card"
+        role="alertdialog"
+        aria-modal="true"
+        [attr.aria-label]="title"
+        (click)="$event.stopPropagation()"
+    >
+        <h3>{{ title }}</h3>
+        <p>{{ message }}</p>
+        <div class="dialog-actions">
+            <button type="button" class="btn btn-ghost" (click)="cancel()">Cancel</button>
+            <button type="button" class="btn btn-danger" (click)="confirm()">{{ confirmLabel }}</button>
+        </div>
+    </div>
+</div>
+}

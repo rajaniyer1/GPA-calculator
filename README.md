@@ -1,46 +1,87 @@
-# Gpacalc
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.8.
+# GradePath
 
-## Summary
-A responsive Angular web application that calculates GPA in real time and tracks semester performance with a clean UI.
+A GPA calculator and student productivity app built with Angular 17. Track courses, compute weighted and unweighted GPA, manage multiple semesters, and plan the grades you need to hit a target GPA — all stored locally in the browser.
 
-## Key Features
-- Real-time GPA calculation engine
-- Responsive UI for mobile and desktop
-- Semester tracking system
-- Clean Angular component-based architecture
+## Features
 
-## Tech Stack
-- Angular
-- TypeScript
-- HTML / CSS
+**GPA calculation**
+- Add/remove courses with name, letter grade, credits (0–10), and course type (Regular / Honors / AP)
+- Weighted and unweighted GPA, computed live as you edit
+- Customizable grade scale (point values per letter grade) and Honors/AP weighting bonus
+- Per-course "quality points" breakdown showing exactly how the GPA was derived
+- No weighting bonus applied to D/F grades, matching typical school policy
 
-## My Role / What I Built
-- Built GPA calculation logic and state handling
-- Designed responsive UI components
-- Implemented real-time data updates across UI
+**Semesters & history**
+- Multiple semesters, each with its own course list
+- Cumulative GPA computed across all semesters
+- Rename, delete, or reset any semester independently
+- All data auto-saves to `localStorage` — no accounts, no backend
 
+**Goal tracking**
+- Set a target cumulative GPA
+- Enter how many credits you plan to take next
+- See the average grade you'd need on those credits to hit your goal
 
-## Development server
+**Export & share**
+- Copy a plain-text GPA summary to the clipboard
+- Export a semester (or full history) as JSON
+- Print / save as PDF via the browser's print dialog
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+**UI**
+- Custom design system (no Bootstrap) with light/dark themes that follow system preference or a manual toggle
+- Responsive layout for desktop and mobile, with a collapsible nav on small screens
+- Accessible forms (labelled inputs, `aria-live` GPA updates, focus-visible states, dialog semantics on confirmations)
 
-## Code scaffolding
+## Tech stack
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- Angular 17, standalone components, signals for state management
+- `@angular/animations` for transitions
+- Plain CSS with custom properties (design tokens) — no CSS framework
+- Karma/Jasmine for unit tests
+
+## Project structure
+
+```
+src/app/
+  core/
+    models/       Course, Semester, AppSettings types
+    services/      GpaCalculatorService (pure GPA math), StorageService (localStorage + legacy migration),
+                    AppStoreService (signals-based app state), ThemeService, ToastService
+  shared/
+    components/    Reusable confirm-dialog and toast components
+  features/
+    calculator/    Active semester: course editor, GPA breakdown, grade-scale editor
+    history/       All semesters, cumulative GPA, semester management
+    goal-tracker/   Target GPA planner
+  app.component.*  Shell: nav, theme toggle, router outlet
+  app.routes.ts     Route definitions
+```
+
+## Development
+
+```bash
+npm install
+ng serve
+```
+
+Navigate to `http://localhost:4200/`. The app reloads automatically on source changes.
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```bash
+ng build
+```
 
-## Running unit tests
+Build artifacts are written to `dist/gpacalc`.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Tests
 
-## Running end-to-end tests
+```bash
+ng test
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Runs unit tests via Karma/Jasmine, including a dedicated suite for `GpaCalculatorService` covering weighted/unweighted math, weighting bonuses, the D/F bonus exemption, and the goal-tracker's required-GPA formula.
 
-## Further help
+## Data & privacy
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+All course, semester, and settings data is stored in the browser's `localStorage`. Nothing is sent to a server. Clearing browser storage (or using "Reset everything") permanently deletes it — export a JSON backup first if you want to keep a copy.

@@ -1,0 +1,70 @@
+<div class="page">
+    <div class="card">
+        <span class="section-title">Your goal</span>
+        <div class="goal-inputs">
+            <div class="field">
+                <label for="target-gpa">Target GPA</label>
+                <input
+                    class="input"
+                    id="target-gpa"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    max="5"
+                    [value]="targetGpa()"
+                    (change)="setTargetGpa($any($event.target).value)"
+                />
+            </div>
+            <div class="field">
+                <label for="future-credits">Credits you still plan to take</label>
+                <input
+                    class="input"
+                    id="future-credits"
+                    type="number"
+                    step="0.5"
+                    min="0"
+                    [value]="futureCredits()"
+                    (change)="setFutureCredits($any($event.target).value)"
+                />
+            </div>
+        </div>
+
+        <div class="current-stats help-text">
+            Current cumulative GPA: <strong>{{ currentGpa()?.toFixed(2) ?? '—' }}</strong>
+            over <strong>{{ currentCredits() }}</strong> credits.
+        </div>
+    </div>
+
+    <div class="card result-card" aria-live="polite">
+        @switch (status()) {
+            @case ('no-credits') {
+            <div class="empty-state">
+                <h3>Add planned credits</h3>
+                <p>Enter how many more credits you plan to take to see what average grade you'll need.</p>
+            </div>
+            }
+            @case ('already-there') {
+            <span class="badge badge-success">Goal already met</span>
+            <p class="result-message">
+                Your current GPA already meets or exceeds {{ targetGpa().toFixed(2) }} — any passing grade will keep you there.
+            </p>
+            }
+            @case ('impossible') {
+            <span class="badge badge-warning">Not achievable this term</span>
+            <p class="result-message">
+                Reaching {{ targetGpa().toFixed(2) }} would require more than {{ requiredGpa()?.toFixed(2) }} points per
+                credit, which is above the top of your grade scale. Consider more credits or a longer time horizon.
+            </p>
+            }
+            @case ('on-track') {
+            <span class="section-title">Required average</span>
+            <span class="stat-value">{{ requiredGpa()?.toFixed(2) }}</span>
+            <p class="result-message">
+                You need roughly a
+                <strong>{{ nearestGrade()?.label }}</strong>
+                average across your remaining {{ futureCredits() }} credits to reach a {{ targetGpa().toFixed(2) }} GPA.
+            </p>
+            }
+        }
+    </div>
+</div>

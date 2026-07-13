@@ -1,0 +1,7 @@
+<div class="toast-stack" aria-live="polite">
+    @for (toast of toasts(); track toast.id) {
+    <div class="toast" [class]="'toast-' + toast.tone" (click)="dismiss(toast.id)">
+        {{ toast.message }}
+    </div>
+    }
+</div>

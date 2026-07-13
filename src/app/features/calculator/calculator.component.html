@@ -1,0 +1,253 @@
+<div class="page">
+    @if (semester(); as sem) {
+
+    <div class="gpa-summary card">
+        <div class="mode-toggle no-print" role="tablist" aria-label="GPA mode">
+            <button
+                type="button"
+                role="tab"
+                [attr.aria-selected]="settings().primaryMode === 'weighted'"
+                class="mode-btn"
+                [class.active]="settings().primaryMode === 'weighted'"
+                (click)="setPrimaryMode('weighted')"
+            >
+                Weighted
+            </button>
+            <button
+                type="button"
+                role="tab"
+                [attr.aria-selected]="settings().primaryMode === 'unweighted'"
+                class="mode-btn"
+                [class.active]="settings().primaryMode === 'unweighted'"
+                (click)="setPrimaryMode('unweighted')"
+            >
+                Unweighted
+            </button>
+        </div>
+
+        <div class="gpa-figures" aria-live="polite">
+            <div class="gpa-figure">
+                <span class="section-title">{{ settings().primaryMode === 'weighted' ? 'Weighted GPA' : 'Unweighted GPA' }}</span>
+                <span class="stat-value">
+                    {{ (settings().primaryMode === 'weighted' ? result().weightedGpa : result().unweightedGpa)?.toFixed(2) ?? '—' }}
+                </span>
+            </div>
+            <div class="gpa-figure secondary">
+                <span class="section-title">{{ settings().primaryMode === 'weighted' ? 'Unweighted' : 'Weighted' }}</span>
+                <span class="stat-value-sm">
+                    {{ (settings().primaryMode === 'weighted' ? result().unweightedGpa : result().weightedGpa)?.toFixed(2) ?? '—' }}
+                </span>
+            </div>
+            <div class="gpa-figure secondary">
+                <span class="section-title">Credits</span>
+                <span class="stat-value-sm">{{ result().totalCredits }}</span>
+            </div>
+        </div>
+
+        @if (result().breakdown.length) {
+        <button type="button" class="btn btn-ghost btn-sm no-print" (click)="toggleBreakdown()">
+            {{ showBreakdown() ? 'Hide' : 'Show' }} calculation breakdown
+        </button>
+        }
+
+        @if (showBreakdown()) {
+        <div class="breakdown-table" role="table" aria-label="GPA calculation breakdown">
+            <div class="breakdown-row breakdown-head" role="row">
+                <span role="columnheader">Course</span>
+                <span role="columnheader">Grade</span>
+                <span role="columnheader">Base pts</span>
+                <span role="columnheader">Bonus</span>
+                <span role="columnheader">Credits</span>
+                <span role="columnheader">Quality pts</span>
+            </div>
+            @for (row of result().breakdown; track row.course.id) {
+            <div class="breakdown-row" role="row">
+                <span role="cell">{{ row.course.name || 'Untitled' }}</span>
+                <span role="cell">{{ row.course.grade }}</span>
+                <span role="cell">{{ row.basePoints.toFixed(2) }}</span>
+                <span role="cell">{{ row.bonus ? '+' + row.bonus.toFixed(2) : '—' }}</span>
+                <span role="cell">{{ row.course.credits }}</span>
+                <span role="cell">{{ row.qualityPoints.toFixed(2) }}</span>
+            </div>
+            }
+            <p class="help-text breakdown-note">
+                Quality points = (base grade points + weighting bonus) × credits. GPA = total quality points ÷ total credits.
+            </p>
+        </div>
+        }
+    </div>
+
+    <div class="toolbar no-print">
+        <button type="button" class="btn btn-primary" (click)="addCourse()">+ Add course</button>
+        <div class="toolbar-actions">
+            <button type="button" class="btn btn-secondary btn-sm" (click)="toggleGradeScale()">Grade scale</button>
+            <button type="button" class="btn btn-secondary btn-sm" (click)="copySummary()">Copy summary</button>
+            <button type="button" class="btn btn-secondary btn-sm" (click)="exportJson()">Export JSON</button>
+            <button type="button" class="btn btn-secondary btn-sm" (click)="printSummary()">Print / Save PDF</button>
+            <button type="button" class="btn btn-ghost btn-sm" (click)="requestReset()">Reset semester</button>
+        </div>
+    </div>
+
+    @if (showGradeScale()) {
+    <div class="card grade-scale-panel no-print">
+        <div class="card-header">
+            <h2>Grade scale &amp; weighting</h2>
+            <button type="button" class="btn btn-icon" (click)="toggleGradeScale()" aria-label="Close grade scale editor">✕</button>
+        </div>
+        <p class="help-text" style="margin-bottom: var(--space-4);">
+            Adjust the grade point values your school uses, and how much bonus Honors/AP courses receive.
+            No bonus is applied to D or F grades.
+        </p>
+        <div class="scale-grid">
+            @for (grade of settings().gradeScale; track grade.label) {
+            <div class="field">
+                <label [for]="'grade-' + grade.label">{{ grade.label }}</label>
+                <input
+                    class="input"
+                    [id]="'grade-' + grade.label"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    [value]="grade.points"
+                    (change)="updateGradePoint(grade.label, $any($event.target).value)"
+                />
+            </div>
+            }
+        </div>
+        <div class="section-title" style="margin-top: var(--space-5);">Weighting bonus</div>
+        <div class="scale-grid">
+            <div class="field">
+                <label for="honors-bonus">Honors (+)</label>
+                <input
+                    class="input"
+                    id="honors-bonus"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    [value]="settings().weightBonuses.Honors"
+                    (change)="updateBonus('Honors', $any($event.target).value)"
+                />
+            </div>
+            <div class="field">
+                <label for="ap-bonus">AP (+)</label>
+                <input
+                    class="input"
+                    id="ap-bonus"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    [value]="settings().weightBonuses.AP"
+                    (change)="updateBonus('AP', $any($event.target).value)"
+                />
+            </div>
+        </div>
+    </div>
+    }
+
+    <div class="course-list">
+        @if (!sem.courses.length) {
+        <div class="empty-state card">
+            <h3>No courses yet</h3>
+            <p>Add your first course to start calculating your GPA.</p>
+            <button type="button" class="btn btn-primary" style="margin-top: var(--space-4);" (click)="addCourse()">
+                + Add course
+            </button>
+        </div>
+        }
+
+        @for (course of sem.courses; track trackByCourseId($index, course)) {
+        <div class="course-card card">
+            <div class="course-grid">
+                <div class="field course-name">
+                    <label [for]="'name-' + course.id">Course name</label>
+                    <input
+                        class="input"
+                        [id]="'name-' + course.id"
+                        type="text"
+                        placeholder="e.g. AP Biology"
+                        [value]="course.name"
+                        (change)="updateName(course, $any($event.target).value)"
+                    />
+                </div>
+
+                <div class="field">
+                    <label [for]="'grade-select-' + course.id">Grade</label>
+                    <select
+                        class="input"
+                        [class.invalid]="!course.grade"
+                        [id]="'grade-select-' + course.id"
+                        [ngModel]="course.grade ?? ''"
+                        (ngModelChange)="updateGrade(course, $event)"
+                        [ngModelOptions]="{ standalone: true }"
+                    >
+                        <option value="">Select</option>
+                        @for (label of gradeLabels(); track trackByLabel($index, {label})) {
+                        <option [value]="label">{{ label }}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label [for]="'credits-' + course.id">Credits</label>
+                    <input
+                        class="input"
+                        [class.invalid]="course.credits === null || course.credits < 0 || course.credits > 10"
+                        [id]="'credits-' + course.id"
+                        type="number"
+                        min="0"
+                        max="10"
+                        step="0.5"
+                        placeholder="e.g. 1"
+                        [value]="course.credits"
+                        (change)="updateCredits(course, $any($event.target).value)"
+                    />
+                </div>
+
+                <div class="field course-remove">
+                    <label class="visually-hidden">Remove course</label>
+                    <button
+                        type="button"
+                        class="btn btn-icon"
+                        (click)="removeCourse(course.id)"
+                        [attr.aria-label]="'Remove ' + (course.name || 'course')"
+                    >
+                        🗑
+                    </button>
+                </div>
+            </div>
+
+            <div class="category-group" role="radiogroup" [attr.aria-label]="'Course type for ' + (course.name || 'course')">
+                @for (cat of categories; track cat) {
+                <label class="category-chip" [class.active]="course.category === cat">
+                    <input
+                        type="radio"
+                        [name]="'category-' + course.id"
+                        [value]="cat"
+                        [checked]="course.category === cat"
+                        (change)="updateCategory(course, cat)"
+                    />
+                    {{ cat }}
+                </label>
+                }
+            </div>
+
+            @if (!course.credits) {
+            <p class="error-text">Credits are required (0–10).</p>
+            } @else if (course.credits > 10 || course.credits < 0) {
+            <p class="error-text">Credits must be between 0 and 10.</p>
+            }
+        </div>
+        }
+    </div>
+
+    <app-confirm-dialog
+        [open]="confirmResetOpen()"
+        title="Reset this semester?"
+        message="All courses in {{ sem.name }} will be removed. This can't be undone."
+        confirmLabel="Reset"
+        (confirmed)="confirmReset()"
+        (cancelled)="cancelReset()"
+    ></app-confirm-dialog>
+
+    }
+</div>

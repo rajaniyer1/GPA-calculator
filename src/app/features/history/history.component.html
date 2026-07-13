@@ -1,0 +1,99 @@
+<div class="page">
+    <div class="card cumulative-card">
+        <span class="section-title">Cumulative GPA</span>
+        <div class="gpa-figures">
+            <div class="gpa-figure">
+                <span class="help-text">Weighted</span>
+                <span class="stat-value">{{ cumulative().weightedGpa?.toFixed(2) ?? '—' }}</span>
+            </div>
+            <div class="gpa-figure">
+                <span class="help-text">Unweighted</span>
+                <span class="stat-value-sm">{{ cumulative().unweightedGpa?.toFixed(2) ?? '—' }}</span>
+            </div>
+            <div class="gpa-figure">
+                <span class="help-text">Total credits</span>
+                <span class="stat-value-sm">{{ cumulative().totalCredits }}</span>
+            </div>
+            <div class="gpa-figure">
+                <span class="help-text">Semesters</span>
+                <span class="stat-value-sm">{{ summaries().length }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="toolbar">
+        <div class="field new-semester-field">
+            <label for="new-semester" class="visually-hidden">New semester name</label>
+            <input
+                class="input"
+                id="new-semester"
+                type="text"
+                placeholder="New semester name (e.g. Fall 2026)"
+                [(ngModel)]="newSemesterName"
+                (keydown.enter)="addSemester()"
+            />
+        </div>
+        <div class="toolbar-actions">
+            <button type="button" class="btn btn-primary" (click)="addSemester()">+ Add semester</button>
+            <button type="button" class="btn btn-secondary btn-sm" (click)="exportAll()">Export all (JSON)</button>
+            <button type="button" class="btn btn-ghost btn-sm" (click)="requestResetAll()">Reset everything</button>
+        </div>
+    </div>
+
+    <div class="semester-list">
+        @for (item of summaries(); track item.semester.id) {
+        <div class="card semester-card">
+            @if (renamingId() === item.semester.id) {
+            <input
+                class="input"
+                type="text"
+                [(ngModel)]="renameValue"
+                (keydown.enter)="saveRename(item.semester.id)"
+                (blur)="saveRename(item.semester.id)"
+            />
+            } @else {
+            <button type="button" class="semester-name" (click)="openSemester(item.semester.id)">
+                {{ item.semester.name }}
+            </button>
+            }
+
+            <div class="semester-stats">
+                <span class="badge badge-accent">W {{ item.weightedGpa?.toFixed(2) ?? '—' }}</span>
+                <span class="badge">U {{ item.unweightedGpa?.toFixed(2) ?? '—' }}</span>
+                <span class="badge">{{ item.credits }} cr</span>
+                <span class="badge">{{ item.semester.courses.length }} courses</span>
+            </div>
+
+            <div class="semester-actions">
+                <button type="button" class="btn btn-ghost btn-sm" (click)="startRename(item.semester)">Rename</button>
+                <button type="button" class="btn btn-ghost btn-sm" (click)="requestDelete(item.semester)">Delete</button>
+            </div>
+        </div>
+        }
+
+        @if (!summaries().length) {
+        <div class="empty-state card">
+            <h3>No semesters yet</h3>
+            <p>Create a semester to start tracking your GPA history.</p>
+        </div>
+        }
+    </div>
+
+    <app-confirm-dialog
+        [open]="!!deleteTarget()"
+        title="Delete semester?"
+        message="{{ deleteTarget()?.name }} and all of its courses will be permanently removed."
+        confirmLabel="Delete"
+        (confirmed)="confirmDelete()"
+        (cancelled)="cancelDelete()"
+    ></app-confirm-dialog>
+
+    <app-confirm-dialog
+        [open]="confirmResetAllOpen()"
+        title="Reset everything?"
+        message="All semesters, courses, and settings will be permanently erased."
+        confirmLabel="Reset everything"
+        (confirmed)="confirmResetAll()"
+        (cancelled)="cancelResetAll()"
+    ></app-confirm-dialog>
+</div>

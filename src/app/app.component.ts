@@ -1,24 +1,24 @@
-import { Component } from '@angular/core';
-import { GradepointcalcComponent } from './gradepointcalc/gradepointcalc.component';
-import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { ThemeService } from './core/services/theme.service';
+import { ToastComponent } from './shared/components/toast/toast.component';
+
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [
-        CommonModule,
-        RouterOutlet,
-        RouterLink,
-        RouterLinkActive
-    ],
+    imports: [RouterOutlet, RouterLink, RouterLinkActive, ToastComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css'
 })
 export class AppComponent {
-    selectedTab = 'gpaCalculator'; // Default selected tab
+    theme = inject(ThemeService);
+    mobileMenuOpen = signal(false);
 
-    // Select the active tab
-    selectTab(tab: string) {
-        this.selectedTab = tab; // Update the selected tab
+    toggleMobileMenu(): void {
+        this.mobileMenuOpen.update((v) => !v);
+    }
+
+    closeMobileMenu(): void {
+        this.mobileMenuOpen.set(false);
     }
 }

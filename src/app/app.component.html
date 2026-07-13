@@ -1,45 +1,40 @@
-<!-- <nav>
-  <ul>
-    <li><a routerLink="/gpa-calculator" routerLinkActive="active" ariaCurrentWhenActive="page">First Component</a></li>
-  </ul>
-</nav> -->
-<!-- <nav>
-    <a
-        class="button"
-        routerLink="/gpa-calculator"
-        routerLinkActive="activebutton"
-        ariaCurrentWhenActive="page"
-    >
-        GPA Calculator
-    </a>
-</nav> -->
+<header class="app-header no-print">
+    <div class="app-header-inner">
+        <a class="brand" routerLink="/" (click)="closeMobileMenu()">
+            <span class="brand-mark">GP</span>
+            <span class="brand-name">GradePath</span>
+        </a>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <!-- <a class="navbar-brand" href="#">Home</a> -->
-    <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-    >
-        <span class="navbar-toggler-icon"></span>
-    </button>
+        <nav class="main-nav" [class.open]="mobileMenuOpen()">
+            <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMobileMenu()">Calculator</a>
+            <a routerLink="/history" routerLinkActive="active" (click)="closeMobileMenu()">History</a>
+            <a routerLink="/goals" routerLinkActive="active" (click)="closeMobileMenu()">Goal Tracker</a>
+        </nav>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a
-                    class="nav-link"
-                    routerLink="/gpa-calculator"
-                    routerLinkActive="activebutton"
-                    ariaCurrentWhenActive="page"
-                    >GPA Calculator</a
-                >
-            </li>
-        </ul>
+        <div class="header-actions">
+            <button
+                type="button"
+                class="btn btn-icon theme-toggle"
+                (click)="theme.toggle()"
+                [attr.aria-label]="theme.resolvedTheme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+            >
+                {{ theme.resolvedTheme() === 'dark' ? '☀️' : '🌙' }}
+            </button>
+            <button
+                type="button"
+                class="btn btn-icon menu-toggle"
+                (click)="toggleMobileMenu()"
+                [attr.aria-expanded]="mobileMenuOpen()"
+                aria-label="Toggle navigation menu"
+            >
+                ☰
+            </button>
+        </div>
     </div>
-</nav>
-<router-outlet></router-outlet>
+</header>
+
+<main>
+    <router-outlet></router-outlet>
+</main>
+
+<app-toast></app-toast>

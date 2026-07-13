@@ -1,0 +1,88 @@
+.cumulative-card {
+    margin-bottom: var(--space-5);
+}
+
+.gpa-figures {
+    display: flex;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+    margin-top: var(--space-3);
+}
+
+.gpa-figure {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-value-sm {
+    font-size: 1.4rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-5);
+}
+
+.new-semester-field {
+    flex: 1;
+    min-width: 220px;
+}
+
+.toolbar-actions {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+}
+
+.semester-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.semester-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    animation: expand-in 0.18s ease-out;
+}
+
+.semester-name {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 0;
+    text-align: left;
+}
+
+.semester-name:hover {
+    color: var(--accent);
+}
+
+.semester-stats {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+}
+
+.semester-actions {
+    display: flex;
+    gap: var(--space-1);
+}
+
+@keyframes expand-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
